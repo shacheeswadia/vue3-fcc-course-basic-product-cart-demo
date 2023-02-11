@@ -27,7 +27,7 @@
       </nav>
       <a @click="toggleSidebar" class="top-bar-cart-link">
         <i class="icofont-cart-alt icofont-1x"></i>
-        <span>Cart (0)</span>
+        <span>Cart ({{ totalQuantity }})</span>
       </a>
     </header>
 
@@ -85,7 +85,7 @@
 
     </main>
 
-    <sidebar v-if="showSideBar" :toggle="toggleSidebar" :cart="cart" :inventory="inventory" />
+    <sidebar v-if="showSideBar" :toggle="toggleSidebar" :cart="cart" :inventory="inventory" :remove="removeItem" />
 
     <footer>
     </footer>
@@ -104,6 +104,13 @@
             cart: {} // items in the cart 
           }
         },
+        computed: {
+          totalQuantity() {
+            return Object.values(this.cart).reduce((acc, curr) => {
+              return acc + curr;
+            }, 0)
+          }
+        },
         methods: {
           addToCart(name, index) {
             // receive the number and name of item
@@ -111,10 +118,14 @@
               this.cart[name] = 0;
             }
             this.cart[name] += this.inventory[index].quantity;
+            this.inventory[index].quantity = 0;
             console.log("Cart items", this.cart, this.inventory)
           },
           toggleSidebar() {
             this.showSideBar = !this.showSideBar;
+          },
+          removeItem(name) {
+            delete this.cart[name];
           }
         },
         async mounted() {
@@ -127,7 +138,7 @@
 
     // make the cart as a component
     app.component('sidebar', {
-      props: ['toggle', 'cart', 'inventory'],
+      props: ['toggle', 'cart', 'inventory', 'remove'],
       computed: {
 
       },
@@ -176,7 +187,7 @@
                     <td class="center">{{ quantity }}</td>
                     <td>\${{ quantity * getPrice(key) }}</td>
                     <td class="center">
-                      <button class="btn btn-light cart-remove">
+                      <button @click="remove(key)" class="btn btn-light cart-remove">
                         &times;
                       </button>
                     </td>
