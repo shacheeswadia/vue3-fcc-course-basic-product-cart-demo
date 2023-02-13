@@ -12,8 +12,8 @@
   },
   "devDependencies": {
     "concurrently": "^5.1.0",
-    "live-server": "^1.2.1",
-    "node-sass": "^4.13.1",
+    "live-server": "^1.1.0",
+    "node-sass": "^8.0.0",
     "normalize.css": "^8.0.1",
     "sass-lint": "^1.13.1",
     "tjw-sasslint-rules": "^2.1.0"
